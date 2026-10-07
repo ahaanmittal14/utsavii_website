@@ -16,17 +16,18 @@ const PORT = process.env.PORT || 5000;
 
 const serviceAccountFile = path.join(
   __dirname,
-  "utsavii-firebase-adminsdk-fbsvc-441f7cd5da.json",
+  "utsavii-firebase-adminsdk-fbsvc-441f7cd5da.json"
 );
 
 let firebaseCredential;
 
 if (fs.existsSync(serviceAccountFile)) {
-  // Local development: use the downloaded Firebase service-account file.
-  firebaseCredential = admin.credential.cert(require(serviceAccountFile));
+  // Local development
+  const serviceAccount = require(serviceAccountFile);
+  firebaseCredential = cert(serviceAccount);
 } else {
-  // Render/production: use environment variables.
-  firebaseCredential = admin.credential.cert({
+  // Render / production
+  firebaseCredential = cert({
     projectId: process.env.FIREBASE_PROJECT_ID,
     clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
     privateKey: process.env.FIREBASE_PRIVATE_KEY
@@ -35,11 +36,11 @@ if (fs.existsSync(serviceAccountFile)) {
   });
 }
 
-admin.initializeApp({
+initializeApp({
   credential: firebaseCredential,
 });
 
-const db = admin.firestore();
+const db = getFirestore();
 
 console.log("✅ Firebase Firestore connected");
 
