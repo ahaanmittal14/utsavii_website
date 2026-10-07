@@ -1,0 +1,705 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Utsavii | Admin Dashboard</title>
+    <style>
+      :root {
+        --burgundy: #6b1f3a;
+        --rose: #d8a1a7;
+        --ivory: #f7e7ce;
+        --gold: #c8a96a;
+        --white: #fffdf9;
+        --ink: #38212a;
+        --muted: #806872;
+        --line: rgba(107, 31, 58, 0.16);
+        --shadow: 0 18px 50px rgba(107, 31, 58, 0.12);
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: var(--ivory);
+        color: var(--ink);
+        font-family: Arial, Helvetica, sans-serif;
+      }
+      button,
+      input,
+      textarea,
+      select {
+        font: inherit;
+      }
+      button {
+        cursor: pointer;
+      }
+      header {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        background: var(--burgundy);
+        color: var(--ivory);
+        border-bottom: 3px solid var(--gold);
+      }
+      .nav {
+        max-width: 1200px;
+        margin: auto;
+        padding: 17px 22px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+      }
+      .logo {
+        font:
+          700 30px Georgia,
+          serif;
+        letter-spacing: 1px;
+      }
+      .nav-actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .nav-btn,
+      .back {
+        border: 1px solid rgba(247, 231, 206, 0.45);
+        background: transparent;
+        color: var(--ivory);
+        padding: 9px 15px;
+        border-radius: 999px;
+        text-decoration: none;
+        font-weight: 700;
+      }
+      main {
+        max-width: 1200px;
+        margin: auto;
+        padding: 38px 22px;
+      }
+      h1,
+      h2,
+      h3 {
+        font-family: Georgia, "Times New Roman", serif;
+        color: var(--burgundy);
+      }
+      h1 {
+        font-size: 48px;
+        margin: 0 0 8px;
+      }
+      .subtitle {
+        color: var(--muted);
+        margin: 0 0 30px;
+      }
+      .dashboard {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+      }
+      .card {
+        background: rgba(255, 253, 249, 0.92);
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        padding: 25px;
+        box-shadow: var(--shadow);
+      }
+      .card.full {
+        grid-column: 1/-1;
+      }
+      .card-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+        margin-bottom: 18px;
+      }
+      .card h2 {
+        margin: 0;
+        font-size: 29px;
+      }
+      label {
+        display: block;
+        margin: 13px 0 6px;
+        font-weight: 800;
+        color: var(--burgundy);
+      }
+      input,
+      textarea,
+      select {
+        width: 100%;
+        padding: 12px 13px;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: var(--white);
+        color: var(--ink);
+        outline: none;
+      }
+      input:focus,
+      textarea:focus,
+      select:focus {
+        border-color: var(--gold);
+        box-shadow: 0 0 0 3px rgba(200, 169, 106, 0.15);
+      }
+      textarea {
+        min-height: 100px;
+        resize: vertical;
+      }
+      .row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      .checks {
+        display: flex;
+        gap: 22px;
+        flex-wrap: wrap;
+        margin: 17px 0;
+      }
+      .check {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .check input {
+        width: auto;
+      }
+      .primary {
+        border: 0;
+        border-radius: 999px;
+        padding: 13px 20px;
+        background: var(--burgundy);
+        color: var(--ivory);
+        font-weight: 900;
+      }
+      .primary:hover {
+        background: #54172d;
+      }
+      .secondary {
+        border: 1px solid var(--gold);
+        border-radius: 999px;
+        padding: 9px 15px;
+        background: transparent;
+        color: var(--burgundy);
+        font-weight: 800;
+      }
+      .danger {
+        border: 1px solid #a52d45;
+        border-radius: 999px;
+        padding: 9px 15px;
+        background: transparent;
+        color: #8d2038;
+        font-weight: 800;
+      }
+      .status {
+        min-height: 23px;
+        margin-top: 13px;
+        font-weight: 700;
+      }
+      .success {
+        color: #46713d;
+      }
+      .error {
+        color: #a52d45;
+      }
+      .table-wrap {
+        overflow: auto;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 700px;
+      }
+      th,
+      td {
+        text-align: left;
+        padding: 13px 10px;
+        border-bottom: 1px solid var(--line);
+        vertical-align: middle;
+      }
+      th {
+        color: var(--burgundy);
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+      .product-thumb,
+      .review-avatar {
+        width: 55px;
+        height: 55px;
+        border-radius: 10px;
+        object-fit: cover;
+        background: var(--burgundy);
+      }
+      .review-card {
+        border: 1px solid var(--line);
+        border-radius: 15px;
+        padding: 17px;
+        margin: 12px 0;
+        background: var(--white);
+      }
+      .review-top {
+        display: flex;
+        justify-content: space-between;
+        gap: 15px;
+      }
+      .stars {
+        color: var(--gold);
+        letter-spacing: 2px;
+      }
+      .review-comment {
+        margin: 8px 0;
+        color: var(--muted);
+        line-height: 1.5;
+      }
+      .actions {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .badge {
+        display: inline-block;
+        padding: 5px 9px;
+        border-radius: 999px;
+        background: rgba(216, 161, 167, 0.3);
+        color: var(--burgundy);
+        font-size: 12px;
+        font-weight: 800;
+      }
+      .empty {
+        text-align: center;
+        padding: 30px;
+        color: var(--muted);
+        border: 1px dashed var(--gold);
+        border-radius: 14px;
+      }
+      .loading {
+        color: var(--muted);
+        padding: 20px;
+        text-align: center;
+      }
+      .preview {
+        display: none;
+        margin-top: 15px;
+        border: 1px solid var(--line);
+        border-radius: 13px;
+        overflow: hidden;
+      }
+      .preview img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+      }
+      .toast {
+        display: none;
+        position: fixed;
+        right: 20px;
+        bottom: 20px;
+        z-index: 100;
+        padding: 14px 18px;
+        border-radius: 12px;
+        background: var(--burgundy);
+        color: var(--ivory);
+        border: 1px solid var(--gold);
+        box-shadow: var(--shadow);
+      }
+      .toast.show {
+        display: block;
+      }
+      .stat-row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        margin-bottom: 24px;
+      }
+      .stat {
+        padding: 18px;
+        border-radius: 15px;
+        background: var(--white);
+        border: 1px solid var(--line);
+      }
+      .stat strong {
+        display: block;
+        font:
+          700 30px Georgia,
+          serif;
+        color: var(--burgundy);
+      }
+      .stat span {
+        color: var(--muted);
+        font-size: 13px;
+      }
+      @media (max-width: 850px) {
+        .dashboard {
+          grid-template-columns: 1fr;
+        }
+        .card.full {
+          grid-column: auto;
+        }
+        .stat-row {
+          grid-template-columns: 1fr;
+        }
+        .row {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="nav">
+        <div class="logo">Utsavii Admin</div>
+        <div class="nav-actions">
+          <button class="nav-btn" onclick="refreshEverything()">
+            ↻ Refresh
+          </button>
+          <a class="back" href="index.html">← View Store</a>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <h1>Admin Dashboard</h1>
+      <p class="subtitle">
+        Manage your sarees and customer reviews from one place.
+      </p>
+
+      <div class="stat-row">
+        <div class="stat">
+          <strong id="productCount">—</strong><span>Products</span>
+        </div>
+        <div class="stat">
+          <strong id="reviewCount">—</strong><span>Reviews</span>
+        </div>
+        <div class="stat">
+          <strong id="pendingCount">—</strong><span>Pending Reviews</span>
+        </div>
+      </div>
+
+      <div class="dashboard">
+        <section class="card">
+          <div class="card-head"><h2>Add Saree</h2></div>
+          <form id="productForm">
+            <label for="name">Saree Name *</label>
+            <input id="name" required placeholder="Royal Purple Saree" />
+
+            <div class="row">
+              <div>
+                <label for="price">Price (₹) *</label
+                ><input
+                  id="price"
+                  type="number"
+                  min="0"
+                  required
+                  placeholder="2499"
+                />
+              </div>
+              <div>
+                <label for="category">Category *</label
+                ><input id="category" required placeholder="Silk" />
+              </div>
+            </div>
+
+            <label for="description">Description *</label>
+            <textarea
+              id="description"
+              required
+              placeholder="Describe the saree..."
+            ></textarea>
+
+            <label for="image">Image URL</label>
+            <input
+              id="image"
+              type="url"
+              placeholder="https://example.com/saree.jpg"
+            />
+
+            <label for="badge">Badge</label>
+            <select id="badge">
+              <option value="">None</option>
+              <option>New</option>
+              <option>Bestseller</option>
+              <option>Featured</option>
+              <option>Sale</option>
+            </select>
+
+            <div class="checks">
+              <label class="check"
+                ><input id="featured" type="checkbox" /> Featured</label
+              >
+              <label class="check"
+                ><input id="display" type="checkbox" checked /> Display on
+                website</label
+              >
+            </div>
+
+            <button class="primary" type="submit">Add Saree to MongoDB</button>
+            <div id="productStatus" class="status"></div>
+          </form>
+          <div id="preview" class="preview">
+            <img id="previewImage" alt="Saree preview" />
+          </div>
+        </section>
+
+        <section class="card">
+          <div class="card-head"><h2>Quick Guide</h2></div>
+          <p style="color: var(--muted); line-height: 1.7">
+            <strong style="color: var(--burgundy)">Add Saree:</strong> Fill in
+            the form and submit. The product is saved through
+            <code>POST /api/products</code>.
+          </p>
+          <p style="color: var(--muted); line-height: 1.7">
+            <strong style="color: var(--burgundy)">Reviews:</strong> New reviews
+            are pending until you approve them. Approved reviews are what your
+            storefront displays.
+          </p>
+          <p style="color: var(--muted); line-height: 1.7">
+            <strong style="color: var(--burgundy)">Server:</strong> Keep your
+            <code>npm run dev</code> server running while using this dashboard.
+          </p>
+        </section>
+
+        <section class="card full">
+          <div class="card-head">
+            <h2>Pending Reviews</h2>
+            <button class="secondary" onclick="loadReviews()">
+              ↻ Refresh Reviews
+            </button>
+          </div>
+          <div id="reviewsList">
+            <div class="loading">Loading reviews…</div>
+          </div>
+        </section>
+
+        <section class="card full">
+          <div class="card-head">
+            <h2>Products</h2>
+            <button class="secondary" onclick="loadProducts()">
+              ↻ Refresh Products
+            </button>
+          </div>
+          <div id="productsList">
+            <div class="loading">Loading products…</div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <div id="toast" class="toast"></div>
+
+    <script>
+      const API = "/api";
+
+      document.addEventListener("DOMContentLoaded", () => refreshEverything());
+
+      async function refreshEverything() {
+        await Promise.all([loadProducts(), loadReviews()]);
+      }
+
+      function esc(v) {
+        return String(v ?? "")
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#039;");
+      }
+      function idOf(v) {
+        return v?._id?.$oid || v?._id || v?.id || "";
+      }
+      function showToast(message) {
+        const t = document.getElementById("toast");
+        t.textContent = message;
+        t.classList.add("show");
+        clearTimeout(window.toastTimer);
+        window.toastTimer = setTimeout(() => t.classList.remove("show"), 3200);
+      }
+      function jsonList(data, key) {
+        const value = data?.[key] ?? data?.data ?? data;
+        return Array.isArray(value) ? value : [];
+      }
+
+      document.getElementById("image").addEventListener("input", () => {
+        const url = document.getElementById("image").value.trim();
+        const p = document.getElementById("preview");
+        const img = document.getElementById("previewImage");
+        if (!url) {
+          p.style.display = "none";
+          return;
+        }
+        img.src = url;
+        p.style.display = "block";
+      });
+      document
+        .getElementById("previewImage")
+        .addEventListener(
+          "error",
+          () => (document.getElementById("preview").style.display = "none"),
+        );
+
+      document
+        .getElementById("productForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const status = document.getElementById("productStatus");
+          status.className = "status";
+          status.textContent = "Saving...";
+          const product = {
+            name: document.getElementById("name").value.trim(),
+            price: Number(document.getElementById("price").value),
+            description: document.getElementById("description").value.trim(),
+            category: document.getElementById("category").value.trim(),
+            image: document.getElementById("image").value.trim(),
+            badge: document.getElementById("badge").value,
+            featured: document.getElementById("featured").checked,
+            display: document.getElementById("display").checked,
+          };
+          try {
+            const r = await fetch(API + "/products", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(product),
+            });
+            const data = await r.json().catch(() => ({}));
+            if (!r.ok)
+              throw new Error(
+                data.message || data.error || "Could not create product.",
+              );
+            status.className = "status success";
+            status.textContent = "✓ Saree added successfully.";
+            e.target.reset();
+            document.getElementById("display").checked = true;
+            document.getElementById("preview").style.display = "none";
+            showToast("Saree added to MongoDB.");
+            await loadProducts();
+          } catch (err) {
+            console.error(err);
+            status.className = "status error";
+            status.textContent = "✕ " + err.message;
+          }
+        });
+
+      async function loadProducts() {
+        const box = document.getElementById("productsList");
+        box.innerHTML = '<div class="loading">Loading products…</div>';
+        try {
+          const r = await fetch(API + "/products", { cache: "no-store" });
+          if (!r.ok) throw new Error("Products request failed: " + r.status);
+          const data = await r.json();
+          const products = jsonList(data, "products");
+          document.getElementById("productCount").textContent = products.length;
+          if (!products.length) {
+            box.innerHTML =
+              '<div class="empty">No products yet. Add your first saree above.</div>';
+            return;
+          }
+          box.innerHTML =
+            '<div class="table-wrap"><table><thead><tr><th>Image</th><th>Name</th><th>Category</th><th>Price</th><th>Display</th></tr></thead><tbody>' +
+            products
+              .map(
+                (p) =>
+                  `<tr><td>${p.image ? `<img class="product-thumb" src="${esc(p.image)}" alt="">` : "—"}</td><td><strong>${esc(p.name)}</strong>${p.badge ? `<br><span class="badge">${esc(p.badge)}</span>` : ""}</td><td>${esc(p.category || "—")}</td><td>₹${Number(p.price || 0).toLocaleString("en-IN")}</td><td>${p.display !== false ? "✓" : "Hidden"}</td></tr>`,
+              )
+              .join("") +
+            "</tbody></table></div>";
+        } catch (err) {
+          console.error(err);
+          box.innerHTML =
+            '<div class="empty">Could not load products. Check that your server is running.</div>';
+          document.getElementById("productCount").textContent = "—";
+        }
+      }
+
+      async function loadReviews() {
+        const box = document.getElementById("reviewsList");
+        box.innerHTML = '<div class="loading">Loading reviews…</div>';
+        try {
+          const r = await fetch(API + "/admin/reviews", { cache: "no-store" });
+          if (!r.ok) throw new Error("Reviews request failed: " + r.status);
+          const data = await r.json();
+          const reviews = jsonList(data, "reviews");
+          const pending = reviews.filter((x) => x.approved !== true);
+          document.getElementById("reviewCount").textContent = reviews.length;
+          document.getElementById("pendingCount").textContent = pending.length;
+          if (!pending.length) {
+            box.innerHTML =
+              '<div class="empty">🎉 No pending reviews. You are all caught up.</div>';
+            return;
+          }
+          box.innerHTML = pending
+            .map((r) => {
+              const rid = idOf(r);
+              const rating = Math.max(0, Math.min(5, Number(r.rating || 0)));
+              return `<div class="review-card">
+        <div class="review-top">
+          <div><strong style="color:var(--burgundy);font-size:17px">${esc(r.customerName || "Customer")}</strong><div class="stars">${"★".repeat(rating)}${"☆".repeat(5 - rating)}</div></div>
+          <span class="badge">Pending</span>
+        </div>
+        <div class="review-comment">"${esc(r.comment || "")}"</div>
+        <div style="color:var(--muted);font-size:12px;margin-bottom:12px">Product ID: ${esc(r.productId || "—")}</div>
+        <div class="actions">
+          <button class="primary" onclick="approveReview('${esc(rid)}')">✓ Approve</button>
+          <button class="danger" onclick="hideReview('${esc(rid)}')">Hide</button>
+        </div>
+      </div>`;
+            })
+            .join("");
+        } catch (err) {
+          console.error(err);
+          box.innerHTML =
+            '<div class="empty">Could not load reviews. Check that your server is running.</div>';
+          document.getElementById("reviewCount").textContent = "—";
+          document.getElementById("pendingCount").textContent = "—";
+        }
+      }
+
+      /*
+  These use the review actions that your existing Utsavii backend is expected
+  to expose. If your current server uses different action URLs, only these
+  two functions need to be changed.
+*/
+      async function reviewAction(id, action) {
+        const url =
+          API + "/admin/reviews/" + encodeURIComponent(id) + "/" + action;
+        const response = await fetch(url, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+        });
+
+        const data = await response.json().catch(() => ({}));
+
+        if (!response.ok) {
+          throw new Error(
+            data.message || "Review action failed: HTTP " + response.status,
+          );
+        }
+
+        return data;
+      }
+      async function approveReview(id) {
+        if (!confirm("Approve this review?")) return;
+        try {
+          const data = await reviewAction(id, "approve");
+          showToast(data.message || "Review approved.");
+          await loadReviews();
+        } catch (err) {
+          console.error(err);
+          showToast(
+            "Could not approve review. Check your server review route.",
+          );
+        }
+      }
+
+      async function hideReview(id) {
+        if (!confirm("Hide this review?")) return;
+        try {
+          const data = await reviewAction(id, "hide");
+          showToast(data.message || "Review hidden.");
+          await loadReviews();
+        } catch (err) {
+          console.error(err);
+          showToast("Could not hide review. Check your server review route.");
+        }
+      }
+    </script>
+  </body>
+</html>
